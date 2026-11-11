@@ -378,6 +378,19 @@ class Transformer:
             self.target_width = self.target_height
             self.target_height = tmp
 
+        # A zero target side (width-only or height-only request) is derived
+        # from the other side, so the proportional maths below never divides by 0.
+        if not self.target_height:
+            self.target_height = max(
+                1,
+                round(self.target_width * source_height / source_width),
+            )
+        if not self.target_width:
+            self.target_width = max(
+                1,
+                round(self.target_height * source_width / source_height),
+            )
+
         sign = 1
         if self.context.request.full:
             sign = -1
